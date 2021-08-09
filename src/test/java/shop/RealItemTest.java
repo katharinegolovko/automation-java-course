@@ -30,8 +30,5 @@ class RealItemTest {
                 () -> assertEquals(actualWeight, expectedWeight),
                 () -> assertEquals(actualPrice, expectedPrice)
         );
-        //assertEquals(actualName, expectedName);
-       // assertEquals(actualWeight, expectedWeight);
-        //assertEquals(actualPrice, expectedPrice);
     }
 }
