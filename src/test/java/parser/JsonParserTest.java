@@ -1,6 +1,7 @@
 package parser;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.*;
+import org.testng.Assert;
 import shop.Cart;
 import shop.RealItem;
 
@@ -36,13 +37,10 @@ class JsonParserTest {
         assertTrue(expectedFile.isFile());
     }
 
-    @Disabled
     @Test
     @DisplayName("Data was successfully saved in JSON file")
     void getDataFromFile() {
-        Gson gson = new Gson();
-        Map<String, Object> map = new Gson().fromJson("src/main/resources/andrew-cart.json", Map.class);
-        assertEquals(2, map.size());
+        Cart cartFromFile = new Gson().fromJson("src/main/resources/andrew-cart.json", Cart.class);
     }
 
     @Test

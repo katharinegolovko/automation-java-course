@@ -22,7 +22,7 @@ class CartTest {
     @DisplayName("Total price was calculated successfully for 1 Item")
     public void getTotalPriceForOneItem() {
         double actualResult = userCart.getTotalPrice();
-        double expectedResult = 2.4;
+        double expectedResult = realItem.getPrice() + realItem.getPrice()*0.2;
         Assert.assertEquals(actualResult, expectedResult);
     }
 
@@ -35,8 +35,14 @@ class CartTest {
         virtualItem.setSizeOnDisk(1045);
         userCart.addVirtualItem(virtualItem);
         double actualResult = userCart.getTotalPrice();
-        double expectedResult = 20.4;
+        double expectedResult = realItem.getPrice() + realItem.getPrice()*0.2 + virtualItem.getPrice() + virtualItem.getPrice()*0.2;
         Assert.assertEquals(actualResult, expectedResult);
+    }
+
+    @Test
+    @DisplayName("Real item was successfully removed")
+    public void deleteRealItem() {
+        userCart.deleteRealItem(realItem);
     }
 
     @Test
