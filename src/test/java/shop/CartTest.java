@@ -43,6 +43,23 @@ class CartTest {
     @DisplayName("Real item was successfully removed")
     public void deleteRealItem() {
         userCart.deleteRealItem(realItem);
+        double actualResult = userCart.getTotalPrice();
+        double expectedResult = 0.0;
+        Assert.assertEquals(actualResult, expectedResult);
+    }
+
+    @Test
+    @DisplayName("Virtual item was successfully removed")
+    public void deleteVirtualItem() {
+        VirtualItem virtualItem = new VirtualItem();
+        virtualItem.setName("Notion");
+        virtualItem.setPrice(15);
+        virtualItem.setSizeOnDisk(1045);
+        userCart.addVirtualItem(virtualItem);
+        userCart.deleteVirtualItem(virtualItem);
+        double actualResult = userCart.getTotalPrice();
+        double expectedResult = realItem.getPrice() + realItem.getPrice()*0.2;;
+        Assert.assertEquals(actualResult, expectedResult);
     }
 
     @Test

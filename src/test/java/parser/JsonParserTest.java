@@ -1,12 +1,13 @@
 package parser;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.testng.Assert;
 import shop.Cart;
 import shop.RealItem;
 
 import java.io.*;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,34 +30,37 @@ class JsonParserTest {
     }
 
     @Test
-    @DisplayName("New File can be successfully created")
-    void writeToFile() {
-        parser.writeToFile(userCart);
-        File expectedFile = new File("src/main/resources/user-cart.json");
-        assertTrue(expectedFile.exists());
-        assertTrue(expectedFile.isFile());
-    }
-
-    @Test
     @DisplayName("Data was successfully saved in JSON file")
-    void getDataFromFile() {
-        Cart cartFromFile = new Gson().fromJson("src/main/resources/andrew-cart.json", Cart.class);
+    void getDataFromFile() throws FileNotFoundException {
+        BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/user-cart.json"));
+        Cart cartFromFile = new Gson().fromJson(reader, Cart.class);
+        double actualResult = cartFromFile.getTotalPrice();
+        double expectedResult = realItem.getPrice() + realItem.getPrice()*0.2;
+        Assert.assertEquals(actualResult,expectedResult);
     }
 
     @Test
+    @DisplayName("Data can be successfully read from JSON file")
+    void readDataFromFile() {
+        Cart testCart = parser.readFromFile(new File("src/main/resources/eugen-cart.json"));
+        double actualResult = testCart.getTotalPrice();
+        double expectedResult = 26560.68;
+        Assert.assertEquals(actualResult, expectedResult);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "src/main/resources/user-cart1.json", "src/main/resources/user-cart2.json", "src/main/resources/user-cart3.json", " ", "src/main/resources/user-cart5.json"})
     @DisplayName("Nonexistent File can not be read: Exception is shown")
-    void readFromNonexistentFile() {
+    void readFromFile(String pathName) {
         NoSuchFileException exception = assertThrows(NoSuchFileException.class, () -> {
-            parser.readFromFile(new File("src/main/resources/user-cart1.json"));
+            parser.readFromFile(new File(pathName));
         });
-        assertEquals("File src/main/resources/user-cart1.json.json not found!", exception.getMessage());
+        assertEquals("File " + pathName + ".json not found!", exception.getMessage());
     }
 
     @AfterEach
     void cleanUpAfterTest(){
-        File testFile1 = new File("src/main/resources/user-cart.json");
-        File testFile2 = new File("src/main/resources/test-file.json");
-        testFile1.delete();
-        testFile2.delete();
+        File testFile = new File("src/main/resources/user-cart.json");
+        testFile.delete();
     }
 }
